@@ -27,3 +27,12 @@ Open the inreactive documentation: http://localhost:8000/docs
 # Источник
 ========================================================================================================================
 https://github.com/PacktPublishing/Building-Data-Science-Applications-with-FastAPI-Second-Edition
+
+
+Building Data Science Applications with FastAPI.
+================================================
+Part 1: Introduction to Python and FastAPI
+    1. Python Development Environment Setup
+    2. Python Programming Specificities
+Part 2: Building and Deploying a Complete Web Backend with FastAPI
+Part 3: Building Resilient and Distributed Data Science Systems with FastAPI
