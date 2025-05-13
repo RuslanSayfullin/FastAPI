@@ -27,7 +27,7 @@ Open the inreactive documentation: http://localhost:8000/docs
 # Источник
 ========================================================================================================================
 https://github.com/PacktPublishing/Building-Data-Science-Applications-with-FastAPI-Second-Edition
-
+https://github.com/PacktPublishing/Building-Data-Science-Applications-with-FastAPI-Second-Edition/blob/
 
 Building Data Science Applications with FastAPI.
 ================================================
