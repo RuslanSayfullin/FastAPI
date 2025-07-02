@@ -836,4 +836,54 @@ async def read_item(item_id: int):
         raise HTTPException(status_code=404, detail="Item not found")
     return {"item_id": item_id}
 
-Код становится чище, а ошибки — стандартизированными! 
+Код становится чище, а ошибки — стандартизированными!
+#####
+
+
+Класс APIRouter в FastAPI используется для организации группы связанных маршрутов (endpoints) в отдельный модуль. 
+Это помогает:
+1. Разделять код на логические модули (например, users.py, posts.py).
+2. Упрощать поддержку больших приложений, делая код более читаемым.
+3. Подключать роутеры к основному приложению (FastAPI) с помощью app.include_router().
+
+Пример использования:
+    # main.py (основное приложение)
+    from fastapi import FastAPI
+    from .routers import users, posts  # импортируем роутеры
+
+    app = FastAPI()
+
+    # Подключаем роутеры к основному приложению
+    app.include_router(users.router, prefix="/users", tags=["users"])
+    app.include_router(posts.router, prefix="/posts", tags=["posts"])
+
+
+    # routers/users.py (роутер для пользователей)
+    from fastapi import APIRouter
+
+    router = APIRouter()
+
+    @router.get("/")
+    def get_users():
+        return {"message": "List of users"}
+
+    @router.post("/")
+    def create_user():
+        return {"message": "User created"}
+
+    
+    # routers/posts.py (роутер для постов)
+    from fastapi import APIRouter
+
+    router = APIRouter()
+
+    @router.get("/")
+    def get_posts():
+        return {"message": "List of posts"}
+    
+Ключевые параметры APIRouter:
+- prefix – добавляет префикс ко всем путям роутера (например, /users).
+- tags – группирует endpoints в Swagger-документации.
+- responses – общие ответы для всех endpoints роутера.
+
+Таким образом, APIRouter помогает структурировать код и избегать дублирования.
