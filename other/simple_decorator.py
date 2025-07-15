@@ -1,25 +1,28 @@
 #!/usr/bin/python3
 
-def bencmark(iterator):
-    def realdec(func):
-        import time
-
+def benchmark(items):
+    def other_func(func):
         def wrapper(*args, **kwargs):
-            start = time.time()
-            return_data = func(*args, **kwargs)
-            stop = time.time()
-            print(f"Вреся работы функции {stop-start} с переменной{iterator}")
-            return return_data
+            import time
+            total = 0
+            for i in range(items):
+                start = time.time()
+                return_value = func(*args, **kwargs)
+                stop = time.time()
+                total += (stop-start)
+            print(f"Время выполнения запроса{total/items}")
+            return return_value
         return wrapper
-    return realdec
+    return other_func
 
-@bencmark(iterator=10)
-def get_response():
+
+@benchmark(items=10)
+def get_webpage(url: str) -> str:
     import requests
+    page = requests.get(url)
+    return page.status_code
 
-    result = requests.get("http://www.google.com")
-    return result
 
-iteration = get_response()
-
-print(iteration)
+example_url = "https://www.google.com"
+webpage = get_webpage(example_url)
+print(webpage)
