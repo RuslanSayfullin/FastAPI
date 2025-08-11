@@ -1311,6 +1311,65 @@ select() — это современный (SQLAlchemy 2.0+) способ стр
 ✅ Удобен для IDE (подсказки типов).
 #####
 
+в SQLAlchemy можно работать асинхронно с базой данных, начиная с версии SQLAlchemy 1.4 (и особенно в 2.0+), где появилась официальная поддержка асинхронного взаимодействия через asyncio.
+Основные компоненты асинхронного SQLAlchemy:
+- AsyncEngine (create_async_engine) – асинхронный аналог обычного create_engine.
+- AsyncSession – асинхронная версия Session для работы с транзакциями.
+- AsyncConnection – асинхронное соединение с БД.
+- Поддержка асинхронных драйверов БД (например, asyncpg для PostgreSQL, aiomysql для MySQL).
+Пример асинхронной работы с SQLAlchemy (PostgreSQL + asyncpg):
+    from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+    from sqlalchemy.orm import declarative_base, sessionmaker
+    from sqlalchemy import Column, Integer, String
+
+    # Асинхронный движок (используется asyncpg)
+    engine = create_async_engine(
+        "postgresql+asyncpg://user:password@localhost/dbname",
+        echo=True  # Логирование запросов
+    )
+
+    # Асинхронная сессия
+    AsyncSessionLocal = sessionmaker(
+        bind=engine,
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
+
+    Base = declarative_base()
+
+    # Модель
+    class User(Base):
+        __tablename__ = "users"
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+
+    # Создание таблиц (асинхронно)
+    async def init_db():
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+    # Пример асинхронного запроса
+    async def get_users():
+        async with AsyncSessionLocal() as session:
+            result = await session.execute("SELECT * FROM users")
+            users = result.scalars().all()
+            return users
+
+Важные моменты:
+1. Асинхронные драйверы:
+    * PostgreSQL: asyncpg (рекомендуется) или psycopg3 (async режим).
+    * MySQL: aiomysql или asyncmy.
+    * SQLite: aiosqlite.
+
+2. Методы работы:
+    * Вместо session.execute() используется await session.execute().
+    * Запросы к БД должны быть внутри async with (или явно await).
+3. Ограничения:
+    * Не все расширения SQLAlchemy поддерживают асинхронный режим.
+    * Некоторые ORM-фичи могут работать медленнее из-за накладных расходов на асинхронность.
+
+#####
+
 
 Pydantic
 
